@@ -1,6 +1,6 @@
 export type CommonOptions = {
   /**
-   * Increases the amount of internal reporting returned on standard output or in log files. Increase the verbosity with the -v form by including the option multiple times, (e.g. -vvvvv.)
+   * Increases the amount of logging output
    */
   verbose?: 1 | 2 | 3 | 4 | 5;
   /**
@@ -81,7 +81,7 @@ export type CommonOptions = {
    */
   collection?: string;
   /**
-   * Provides a JSON document as a query that optionally limits the documents included in the output of mongodump. To use the --query option, you must also specify the --collection option.
+   * Provides a JSON document as a query that optionally limits the documents included in the output of mongodump. To use the query option, you must also specify the collection option.
    *
    * You must enclose the query document in single quotes ('{ ... }')
    */
@@ -91,7 +91,7 @@ export type CommonOptions = {
    */
   queryFilePath?: string;
   /**
-   * Includes user and role definitions in the database's dump directory when performing mongodump on a specific database. This option applies only when you specify a database in the --db option.
+   * Includes user and role definitions in the database's dump directory when performing mongodump on a specific database. This option applies only when you specify a database in the database option.
    */
   dumpUsersAndRoles?: boolean;
   /**
