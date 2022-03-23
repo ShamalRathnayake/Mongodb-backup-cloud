@@ -4,11 +4,24 @@ import Backup from '../backup';
 import { generatePathOptions } from '../functions';
 import { URIOptions } from '../../types/types';
 import path from 'path';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 const defaultBackupPath = './backup';
 let deletePath = '';
 
+jest.setTimeout(50000000);
+
 describe('Database backup process with connection string', () => {
+  beforeAll(async () => {
+    const command1 = `mongorestore --uri="mongodb://localhost:27017" -d test dump/test`;
+    await execAsync(command1, { maxBuffer: 1024 * 1024 * 100 });
+    const command2 = `mongorestore --uri="mongodb://localhost:27017" -d backup_test dump/backup_test`;
+    await execAsync(command2, { maxBuffer: 1024 * 1024 * 100 });
+  });
+
   const backupDbFiles = async (
     options: URIOptions,
     backupPath: string = defaultBackupPath,
