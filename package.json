@@ -1,9 +1,10 @@
 {
   "name": "mongodb-backup-cloud",
-  "version": "1.0.1",
-  "description": "backup mongodb and upload to github/gdrive",
+  "version": "1.0.2",
+  "description": "backup mongodb databases and upload to github/google drive",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "homepage": "https://github.com/ShamalRathnayake/Mongodb-backup-cloud",
   "scripts": {
     "dev": "nodemon --config nodemon.json src/index.ts",
     "start": "tsc && node build/index.js",
