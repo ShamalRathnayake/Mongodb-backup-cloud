@@ -1,6 +1,6 @@
 {
   "name": "mongodb-backup-cloud",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "backup mongodb databases and upload to github/google drive",
   "main": "build/index.js",
   "types": "build/index.d.ts",
