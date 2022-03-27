@@ -18,7 +18,7 @@
 ### usage
 
 Backup Process
-```
+```js
 import {Backup, DirectOptions, URIOptions } from  "mongodb-backup-cloud";
 
 // Backup with mongodb connection string
@@ -100,7 +100,7 @@ Backup.withHostAndPort(scheduleOptions);
 
 Upload Process
 
-```
+```js
 import {Upload, GDriveOptions, GithubOptions,} from  "mongodb-backup-cloud";
 
 // Upload files to github
