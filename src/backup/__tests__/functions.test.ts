@@ -141,23 +141,23 @@ describe('Extended option string', () => {
     expect(() =>
       extendedOptionString({
         host: '',
-        port: '2131',
+        port: '27017',
       })
     ).toThrow('Host is required');
 
     expect(
       extendedOptionString({
         host: 'localhost',
-        port: '2131',
+        port: '27017',
       })
-    ).toBe('--host=localhost --port=2131');
+    ).toBe('--host=localhost --port=27017');
 
     expect(
       extendedOptionString({
         host: 'http://127.0.0.1',
-        port: '2131',
+        port: '27017',
       })
-    ).toBe('--host=http://127.0.0.1 --port=2131');
+    ).toBe('--host=http://127.0.0.1 --port=27017');
   });
 
   test('Port option', () => {
@@ -171,19 +171,19 @@ describe('Extended option string', () => {
     expect(
       extendedOptionString({
         host: 'localhost',
-        port: '2131',
+        port: '27017',
       })
-    ).toBe('--host=localhost --port=2131');
+    ).toBe('--host=localhost --port=27017');
   });
 
   test('Username option', () => {
     expect(
       extendedOptionString({
         host: 'localhost',
-        port: '2131',
+        port: '27017',
         username: 'test_user',
       })
-    ).toBe('--host=localhost --port=2131 --username=test_user');
+    ).toBe('--host=localhost --port=27017 --username=test_user');
   });
 
   test('Password option', () => {
@@ -207,6 +207,6 @@ describe('Extended option string', () => {
         gzip: true,
         verbose: 4,
       })
-    ).toBe('--host=localhost --port=2131 --username=user --password=test --gzip --db=test_db -vvvv');
+    ).toBe('--host=localhost --port=2131 --username=user --password=test --authenticationDatabase=admin --gzip --db=test_db -vvvv');
   });
 });

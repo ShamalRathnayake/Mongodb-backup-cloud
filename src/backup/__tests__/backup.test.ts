@@ -16,9 +16,9 @@ jest.setTimeout(50000000);
 
 describe('Database backup process with connection string', () => {
   beforeAll(async () => {
-    const command1 = `mongorestore --uri="mongodb://localhost:27017" -d test dump/test`;
+    const command1 = `mongorestore --uri="mongodb://localhost:27017" dump/test`;
     await execAsync(command1, { maxBuffer: 1024 * 1024 * 100 });
-    const command2 = `mongorestore --uri="mongodb://localhost:27017" -d backup_test dump/backup_test`;
+    const command2 = `mongorestore --uri="mongodb://localhost:27017" dump/backup_test`;
     await execAsync(command2, { maxBuffer: 1024 * 1024 * 100 });
   });
 
@@ -36,7 +36,7 @@ describe('Database backup process with connection string', () => {
       if (!options.schedule) options.oldBackupPath = filePaths.oldBackupDir;
     }
 
-    const output = await Backup.withConnectionString(options);
+    const output = await Backup.withConnectionString(options)
 
     expect(fs.existsSync(backupPath)).toBe(true);
 
@@ -230,6 +230,8 @@ describe('Database backup process with connection string', () => {
 
     deletePath = defaultBackupPath;
   });
+
+
 
   afterEach(() => {
     fs.rmSync(deletePath, { recursive: true, force: true });

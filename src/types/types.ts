@@ -138,6 +138,10 @@ export type DirectOptions = CommonOptions & {
    * Specifies a password with which to authenticate to a MongoDB database that uses authentication.
    */
   password?: string;
+  /**
+   * Specifies the authentication database where the specified username has been created.
+   */
+  authenticationDatabase?: string;
 };
 
 export type GithubOptions = {

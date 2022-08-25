@@ -61,6 +61,7 @@ export const extendedOptionString = ({
   port,
   username,
   password,
+  authenticationDatabase,
   ...rest
 }: DirectOptions) => {
   if (!host.trim()) throw new Error('Host is required');
@@ -70,7 +71,8 @@ export const extendedOptionString = ({
 
   if (username) optionsString += ` --username=${username}`;
   if (password) optionsString += ` --password=${password}`;
-
+  if ((username && password) && !authenticationDatabase) optionsString += ` --authenticationDatabase=admin`;
+  if ((username && password) && authenticationDatabase) optionsString += ` --authenticationDatabase=${authenticationDatabase}`;
   optionsString += generateOptionString(rest);
 
   return optionsString;
@@ -183,18 +185,15 @@ const generatePaths = (
   defaultOutputPath: string,
   archiveExtension: string
 ) =>
-  `${opt ? ' ' : ''}${
-    outputPath
-      ? `${opt ? '--out=' : ''}${outputPath}/${path}`
-      : archive
+  `${opt ? ' ' : ''}${outputPath
+    ? `${opt ? '--out=' : ''}${outputPath}/${path}`
+    : archive
       ? ''
       : `${opt ? '--out=' : ''}${defaultOutputPath}/${path}`
-  } ${
-    archive
-      ? `${opt ? '--archive=' : ''}${archive}/${path}${
-          archiveExtension && ext ? `.${archiveExtension}` : ''
-        }`
-      : ''
+  } ${archive
+    ? `${opt ? '--archive=' : ''}${archive}/${path}${archiveExtension && ext ? `.${archiveExtension}` : ''
+    }`
+    : ''
   }`;
 
 const deleteOldBackups = async (filePath: string, fileDir: string, removeOldDir?: boolean) => {
