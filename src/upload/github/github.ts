@@ -1,9 +1,10 @@
 import { Octokit } from '@octokit/rest';
 const { retry } = require('@octokit/plugin-retry');
-const MyOctokit = Octokit.plugin(retry);
+const globby = require('globby');
 import fs from 'fs';
 import path from 'path';
-const globby = require('globby');
+
+const MyOctokit = Octokit.plugin(retry);
 
 export const init = (token: string) => {
   const octokit: Octokit = new MyOctokit({
@@ -29,11 +30,30 @@ export const init = (token: string) => {
 
 export const getAuthUser = async (octokit: Octokit) => {
   const { data: user } = await octokit.rest.users.getAuthenticated();
+  if (!user.total_private_repos) throw new Error("Please provide `read:user` access to this token to read repository details");
   return user;
 };
 
 export const getRepository = async (octokit: Octokit, owner: string, repoName: string) => {
-  const { data: repos } = await octokit.rest.repos.listForAuthenticatedUser();
+  const repos = [];
+  const githubMaxLimit = 100;
+  let fetchAgain = true;
+  let page = 1;
+
+  do {
+    const { data: paginatedRepos } = await octokit.rest.repos.listForAuthenticatedUser({
+      per_page: githubMaxLimit,
+      page,
+      affiliation: "owner"
+    });
+
+    if (paginatedRepos.length > 0 && paginatedRepos.length === githubMaxLimit) fetchAgain = true;
+    else fetchAgain = false;
+
+    repos.push(...paginatedRepos);
+    page++;
+  } while (fetchAgain);
+
 
   if (repos && !repos.map((repo: any) => repo.name).includes(repoName)) {
     await octokit.repos.createForAuthenticatedUser({
@@ -44,22 +64,39 @@ export const getRepository = async (octokit: Octokit, owner: string, repoName: s
   }
 
   const { data: repository } = await octokit.rest.repos.get({
-    owner,
+    owner: owner,
     repo: repoName,
   });
 
   return repository;
+
 };
 
-export const getBranch = async (octokit: Octokit, username: string, repository: string, branchName: string) => {
-  const { data: branches } = await octokit.rest.repos.listBranches({
-    owner: username,
-    repo: repository,
-  });
+export const getBranch = async (octokit: Octokit, owner: string, repository: string, branchName: string) => {
+  const branches = [];
+  const githubMaxLimit = 100;
+  let fetchAgain = true;
+  let page = 1;
+
+  do {
+    const { data: paginatedBranches } = await octokit.rest.repos.listBranches({
+      owner: owner,
+      repo: repository,
+      per_page: githubMaxLimit,
+      page
+    });
+
+    if (paginatedBranches.length > 0 && paginatedBranches.length === githubMaxLimit) fetchAgain = true;
+    else fetchAgain = false;
+
+    branches.push(...paginatedBranches);
+    page++;
+
+  } while (fetchAgain);
 
   if (!branches.map((branch: any) => branch.name).includes(branchName)) {
     await octokit.rest.git.createRef({
-      owner: username,
+      owner: owner,
       repo: repository,
       ref: `refs/heads/${branchName}`,
       sha: branches[0].commit.sha,
@@ -67,7 +104,7 @@ export const getBranch = async (octokit: Octokit, username: string, repository: 
   }
 
   const { data: branch } = await octokit.rest.repos.getBranch({
-    owner: username,
+    owner: owner,
     repo: repository,
     branch: branchName,
   });

@@ -15,7 +15,7 @@ import {
 
 export default class Upload {
   static async toGitHub(options: GithubOptions) {
-    const { token, repository, repoOwner, email, filePath } = options;
+    const { token, repository, email, filePath } = options;
     const branch = options.branch?.replace(/ /g, '-');
 
     if (!token) throw new Error('Github personal access token is required');
@@ -26,7 +26,7 @@ export default class Upload {
 
     const authUser = await getAuthUser(octokit);
 
-    const remoteRepository = await getRepository(octokit, repoOwner || authUser.login, repository);
+    const remoteRepository = await getRepository(octokit, authUser.login, repository);
 
     const remoteBranch = await getBranch(octokit, authUser.login, remoteRepository.name, branch);
 

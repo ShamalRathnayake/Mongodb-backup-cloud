@@ -1,10 +1,13 @@
 {
   "name": "mongodb-backup-cloud",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "backup mongodb databases and upload to github/google drive",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "homepage": "https://github.com/ShamalRathnayake/Mongodb-backup-cloud",
+  "files": [
+    "build/**"
+  ],
   "scripts": {
     "dev": "nodemon --config nodemon.json src/index.ts",
     "start": "tsc && node build/index.js",
@@ -16,7 +19,8 @@
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "dryrun": "npm publish --dry-run"
   },
   "keywords": [
     "mongodb",

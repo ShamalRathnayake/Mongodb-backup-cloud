@@ -24,11 +24,11 @@ import {Backup, DirectOptions, URIOptions } from  "mongodb-backup-cloud";
 // Backup with mongodb connection string
 -----------------------------------------------
 
-const  uriOptions:  URIOptions  = {
-	uri:  "mongodb://localhost:27017/",
-	database:  'test_db',
-	collection:  'test_collection',
-	outputPath:  './test_backup_path',
+const uriOptions: URIOptions = {
+  uri: "mongodb://localhost:27017/",
+  database: 'test_db',
+  collection: 'test_collection',
+  outputPath: './test_backup_path',
 };
 
 Backup.withConnectionString(uriOptions);
@@ -37,12 +37,12 @@ Backup.withConnectionString(uriOptions);
 // Backup with host & port
 -----------------------------------------------
   
-const  directOptions:  DirectOptions  = {
-	host:  "localhost",
-	port:  "27017",
-	database:  "test_db",
-	collection:  "test_collection",
-	outputPath:  "./test_backup_path",
+const directOptions: DirectOptions = {
+  host: "localhost",
+  port: "27017",
+  database: "test_db",
+  collection: "test_collection",
+  outputPath: "./test_backup_path",
 };
 
 Backup.withHostAndPort(directOptions);
@@ -51,13 +51,13 @@ Backup.withHostAndPort(directOptions);
 // Backup + Delete old backup files
 ----------------------------------------------
 
-const  uriOptions:  URIOptions  = {
-	uri:  "mongodb://localhost:27017/",
-	database:  "test_db",
-	collection:  "test_collection",
-	outputPath:  "./test_backup_path",
-	removeOldBackups:  true,
-	oldBackupPath:  "./old_backup",
+const uriOptions: URIOptions = {
+  uri: "mongodb://localhost:27017/",
+  database: "test_db",
+  collection: "test_collection",
+  outputPath: "./test_backup_path",
+  removeOldBackups: true,
+  oldBackupPath: "./old_backup",
 };
 
 Backup.withConnectionString(uriOptions);
@@ -66,14 +66,14 @@ Backup.withConnectionString(uriOptions);
 // Run backup with cron schedule
 ---------------------------------------------
 
-const  scheduleOptions:  DirectOptions  = {
-	host:  "localhost",
-	port:  "27017",
-	database:  "test_db",
-	collection:  "test_collection",
-	outputPath:  "./test_backup_path",
-	schedule:  '00 00 00 * * *',
-	scheduleCallback: (args) => { /* do something */},
+const scheduleOptions: DirectOptions = {
+  host: "localhost",
+  port: "27017",
+  database: "test_db",
+  collection: "test_collection",
+  outputPath: "./test_backup_path",
+  schedule: '00 00 00 * * *',
+  scheduleCallback: (args) => { /* do something */ },
 };
 
 Backup.withHostAndPort(scheduleOptions);
@@ -82,16 +82,16 @@ Backup.withHostAndPort(scheduleOptions);
 // Backup + Delete old backups with cron schedule
 --------------------------------------------------
   
-const  scheduleOptions:  DirectOptions  = {
-	host:  "localhost",
-	port:  "27017",
-	database:  "test_db",
-	collection:  "test_collection",
-	outputPath:  "./test_backup_path",
-	schedule:  "00 00 00 * * *",
-	scheduleCallback: (args) => {/* do something */},
-	removeOldBackups:  true,
-	localBackupRange:  2,
+const scheduleOptions: DirectOptions = {
+  host: "localhost",
+  port: "27017",
+  database: "test_db",
+  collection: "test_collection",
+  outputPath: "./test_backup_path",
+  schedule: "00 00 00 * * *",
+  scheduleCallback: (args) => {/* do something */ },
+  removeOldBackups: true,
+  localBackupRange: 2,
 };
 
 Backup.withHostAndPort(scheduleOptions);
@@ -105,13 +105,12 @@ import {Upload, GDriveOptions, GithubOptions,} from  "mongodb-backup-cloud";
 
 // Upload files to github
 
-const  githubOptions:  GithubOptions  = {
-	token:  'private access token',
-	repository:  'test_repo',
-	branch:  'main',
-	repoOwner:  'Repo owner Github Username',
-	email:  'your github email',
-	filePath:  './backups'
+const githubOptions: GithubOptions = {
+  token: 'private access token', // with repo and read:user access to read repo names
+  repository: 'test_repo',
+  branch: 'main',
+  email: 'your github email',
+  filePath: './backups'
 }
 
 Upload.toGitHub(githubOptions);
@@ -119,12 +118,12 @@ Upload.toGitHub(githubOptions);
 
 // Upload files to Google Drive
 
-const  driveOptions:  GDriveOptions  = {
-	clientId:  'oAuth client id',
-	clientSecret:  'oAuth client secret',
-	refreshToken:  'oAuth refresh token',
-	driveFolderName:  'test_upload',
-	filePath:  './backups'
+const driveOptions: GDriveOptions = {
+  clientId: 'oAuth client id',
+  clientSecret: 'oAuth client secret',
+  refreshToken: 'oAuth refresh token',
+  driveFolderName: 'test_upload',
+  filePath: './backups'
 }
 
 Upload.toGoogleDrive(driveOptions);
@@ -173,14 +172,14 @@ Upload.toGoogleDrive(driveOptions);
 
 - Github
 
-| option     | type   | default | description                                                                                                            |
-| ---------- | ------ | ------- | ---------------------------------------------------------------------------------------------------------------------- |
-| token      | string | ---     | Github private access token                                                                                            |
-| repository | string | ---     | Github repository name                                                                                                 |
-| branch     | string | ---     | Github repository branch name                                                                                          |
-| email      | string | ---     | Github account email                                                                                                   |
-| filePath   | string | ---     | Path to file or directory that needs to be added to github                                                             |
-| repoOwner  | string | ---     | Repo owner Github Username <br /> ** only needed when the provided Github account email does not own the repository ** |
+| option     | type   | default | description                                                |
+| ---------- | ------ | ------- | ---------------------------------------------------------- |
+| token      | string | ---     | Github private access token                                |
+| repository | string | ---     | Github repository name                                     |
+| branch     | string | ---     | Github repository branch name                              |
+| email      | string | ---     | Github account email                                       |
+| filePath   | string | ---     | Path to file or directory that needs to be added to github |
+
 ---
 
 - Google Drive

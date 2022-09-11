@@ -16,9 +16,9 @@ jest.setTimeout(50000000);
 
 describe('Database backup process with connection string', () => {
   beforeAll(async () => {
-    const command1 = `mongorestore --uri="mongodb://localhost:27017" dump/test`;
+    const command1 = `mongorestore --uri="mongodb://127.0.0.1:27017" -d="test" dump/test`;
     await execAsync(command1, { maxBuffer: 1024 * 1024 * 100 });
-    const command2 = `mongorestore --uri="mongodb://localhost:27017" dump/backup_test`;
+    const command2 = `mongorestore --uri="mongodb://127.0.0.1:27017" -d="backup_test" dump/backup_test`;
     await execAsync(command2, { maxBuffer: 1024 * 1024 * 100 });
   });
 

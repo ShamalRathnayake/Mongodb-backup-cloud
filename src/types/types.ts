@@ -165,10 +165,6 @@ export type GithubOptions = {
    * Path to file or directory that needs to be added to github
    */
   filePath: string;
-  /**
-   * Repo owner Github Username
-   */
-  repoOwner?: string;
 };
 
 export type GDriveOptions = {
