@@ -273,5 +273,17 @@ export const handleBackupProcess = async (options: URIOptions | DirectOptions, c
       if (options.scheduleCallback) options.scheduleCallback(scheduleOutput);
       else return scheduleOutput;
     });
+
+    return {
+      backupPath: '',
+      backupDir: '',
+      oldBackupPath: '',
+      oldBackupDir: '',
+      output: {
+        stdout: '',
+        log: 'Scheduled backup process launched in background.',
+      },
+      deleteStatus: {},
+    }
   }
 };

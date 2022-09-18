@@ -23,7 +23,7 @@ export const createDriveClient = (clientId: string, clientSecret: string, refres
 
 export const getDriveFolder = async (driveClient: drive_v3.Drive, folderName: string) => {
   const { status, statusText, data } = await driveClient.files.list({
-    q: `mimeType='application/vnd.google-apps.folder' and name='${folderName}'`,
+    q: `mimeType='application/vnd.google-apps.folder' and name='${folderName}' and trashed=false`,
     fields: 'files(id, name)',
   });
   if (status !== 200) throw new Error(statusText);
@@ -53,14 +53,10 @@ export const uploadFiles = async (driveClient: drive_v3.Drive, folder: drive_v3.
     let globPath = path.posix.join(path.relative(process.cwd(), filePath), '**');
     if (process.platform === 'win32') globPath = globPath.replace(/\\/g, '/');
     const paths = await globby(globPath);
-    const allUploadedData = [];
+    const allUploadedData: any = [];
     for (const _path of paths) {
-      const parents = path
-        .relative(path.resolve(__dirname, path.relative(__dirname, filePath)), _path)
-        .split(process.platform === 'win32' ? '\\' : '/');
-
-      parents.splice(-1, 1);
-
+      const parents = path.dirname(_path).split('/');
+      parents.shift()
       const uploadedData = await uploadToDrive(driveClient, folder.id as string, _path, parents);
       allUploadedData.push(uploadedData);
     }
@@ -82,6 +78,15 @@ const uploadToDrive = async (
   if (parents.length > 0) {
     parentFolder = await createParentFolders(driveClient, parents, folderId);
   }
+
+  const checkResult = await driveClient.files.list({
+    q: `mimeType!='application/vnd.google-apps.folder' and name='${fileName}' and parents in '${parentFolder}' and trashed=false`,
+    fields: 'files(id, name)',
+  });
+  if (checkResult.status !== 200) throw new Error(checkResult.statusText);
+  let existingFile = checkResult.data.files?.find((file) => file.name === fileName);
+  if (existingFile) return `${filePath} already exists`;
+
   const { status, statusText, data } = await driveClient.files.create({
     requestBody: {
       name: fileName,
@@ -102,7 +107,7 @@ const createParentFolders = async (driveClient: drive_v3.Drive, parents: string[
 
   for (const parent of parents) {
     const checkResult = await driveClient.files.list({
-      q: `mimeType='application/vnd.google-apps.folder' and name='${parent}' and parents in '${prevParentId}'`,
+      q: `mimeType='application/vnd.google-apps.folder' and name='${parent}' and parents in '${prevParentId}' and trashed=false`,
       fields: 'files(id, name)',
     });
     if (checkResult.status !== 200) throw new Error(checkResult.statusText);

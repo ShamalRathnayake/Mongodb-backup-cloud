@@ -1,7 +1,11 @@
 # Mongodb-backup-cloud
 
 >  Automate mongodb instance backup & upload to Github / GDrive
->  
+
+```js
+npm i mongodb-backup-cloud
+```
+
 #### What can this package do?
 
 - Backup **Mongodb** database instances 
@@ -148,8 +152,8 @@ Upload.toGoogleDrive(driveOptions);
 | quiet              | boolean       | false                    | Limits the amount of output                                                                                                                                               |
 | readPreference     | object        | primary                  | Specifies the read preference for mongodump                                                                                                                               |
 | gzip               | boolean       | false                    | Compresses the output. The files have the suffix ' .gz '                                                                                                                  |
-| outputPath         | string        | current_directory/backup | Specifies the directory where mongodump will write BSON files for the dumped databases.                                                                                   |
-| archive            | string        | ---                      | Writes the output to a specified archive file.                                                                                                                            |
+| outputPath         | string        | current_directory/backup | Specifies the directory where mongodump will write BSON files for the dumped databases. **(can't be used together with archive option )**                                 |
+| archive            | string        | ---                      | Writes the output to a specified archive file. **(can't be used together with outputPath option )**                                                                       |
 | archiveExtension   | string        | ---                      | File extension of the archive file.                                                                                                                                       |
 | schedule           | string        | ---                      | cron schedule string. ex:- '0 0 * * * *'                                                                                                                                  |
 | scheduleCallback   | function      | ---                      | Callback function to run after every scheduled backup process completion                                                                                                  |
@@ -172,26 +176,28 @@ Upload.toGoogleDrive(driveOptions);
 
 - Github
 
-| option     | type   | default | description                                                |
-| ---------- | ------ | ------- | ---------------------------------------------------------- |
-| token      | string | ---     | Github private access token                                |
-| repository | string | ---     | Github repository name                                     |
-| branch     | string | ---     | Github repository branch name                              |
-| email      | string | ---     | Github account email                                       |
-| filePath   | string | ---     | Path to file or directory that needs to be added to github |
+| option     | type   | description                                                |
+| ---------- | ------ | ---------------------------------------------------------- |
+| token      | string | Github private access token                                |
+| repository | string | Github repository name                                     |
+| branch     | string | Github repository branch name                              |
+| email      | string | Github account email                                       |
+| filePath   | string | Path to file or directory that needs to be added to github |
 
 ---
 
 - Google Drive
 
 
-| option          | type   | default | description                                                                     |
-| --------------- | ------ | ------- | ------------------------------------------------------------------------------- |
-| clientId        | string | ---     | OAuth client id                                                                 |
-| clientSecret    | string | ---     | OAuth client secret                                                             |
-| refreshToken    | string | ---     | OAuth refresh token                                                             |
-| filePath        | string | ---     | Path to the file or directory that needs to be uploaded                         |
-| driveFolderName | string | ---     | Google drive root level folder name. folder will be created if it doesn't exist |
+| option          | type   | description                                                                      |
+| --------------- | ------ | -------------------------------------------------------------------------------- |
+| clientId        | string | OAuth client id                                                                  |
+| clientSecret    | string | OAuth client secret                                                              |
+| refreshToken    | string | OAuth refresh token                                                              |
+| filePath        | string | Path to the file or directory that needs to be uploaded.                         |
+| driveFolderName | string | Google drive root level folder name. folder will be created if it doesn't exist. |
+
+[How to get OAuth Credentials](https://blog.tericcabrel.com/upload-file-to-google-drive-with-nodejs/)
 
 ---
 
