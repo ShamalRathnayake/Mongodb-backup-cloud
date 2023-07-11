@@ -56,6 +56,8 @@
     "globby": "^11.1.0",
     "googleapis": "^94.0.0",
     "mime-types": "^2.1.34",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "winston": "^3.9.0",
+    "winston-daily-rotate-file": "^4.7.1"
   }
 }

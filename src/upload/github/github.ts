@@ -1,4 +1,4 @@
-import { Octokit } from '@octokit/rest';
+/* import { Octokit } from '@octokit/rest';
 const { retry } = require('@octokit/plugin-retry');
 const globby = require('globby');
 import fs from 'fs';
@@ -234,3 +234,4 @@ export const updateRef = async (
   });
   return update;
 };
+ */

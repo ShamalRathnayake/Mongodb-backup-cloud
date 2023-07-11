@@ -1,20 +1,32 @@
-import { DirectOptions, URIOptions } from '../types/types';
-import { extendedOptionString, generateOptionString, handleBackupProcess } from './functions';
+import OptionsValidator from './helpers/optionsValidator';
+import { BackupOptions } from '../types/types';
+import CommandGenerator from './helpers/commandGenerator';
+import logConfig from './config/logConfig';
+import { BackupLogger } from '../common/logger';
+import PathGenerator from '../common/pathGenerator';
 
 export default class Backup {
-  static async withConnectionString(options: URIOptions) {
-    if (!options.uri) throw new Error('Mongodb connection uri string is required');
-    const commonOptions = generateOptionString(options);
-    const cmd = `mongodump --uri=${options.uri.trim()} ${commonOptions}`;
-    const output = await handleBackupProcess(options, cmd);
+  private command: string;
+  private paths: Record<string, any>;
 
-    return output;
+  constructor(options: BackupOptions, enableLogs: boolean = false) {
+    if (enableLogs) BackupLogger.toggleLogging(true);
+
+    try {
+      BackupLogger.log(logConfig.types.debug, 'Backup process started');
+
+      OptionsValidator.validate(options);
+
+      this.paths = PathGenerator.generatePaths(options);
+
+      this.command = CommandGenerator.generate(options);
+    } catch (error: any) {
+      BackupLogger.log(logConfig.types.error, error.message);
+      throw error;
+    }
   }
 
-  static async withHostAndPort(options: DirectOptions) {
-    const extendedOptions = extendedOptionString(options);
-    const cmd = `mongodump ${extendedOptions}`;
-    const output = await handleBackupProcess(options, cmd);
-    return output;
+  public print() {
+    return this.command;
   }
 }

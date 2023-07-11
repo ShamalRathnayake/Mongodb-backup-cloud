@@ -1,4 +1,4 @@
-import { drive_v3, google } from 'googleapis';
+/* import { drive_v3, google } from 'googleapis';
 import fs from 'fs';
 import path from 'path';
 const mime = require('mime-types');
@@ -130,3 +130,4 @@ const createParentFolders = async (driveClient: drive_v3.Drive, parents: string[
 
   return prevParentId;
 };
+ */

@@ -1,4 +1,4 @@
-import { drive_v3 } from 'googleapis';
+/* import { drive_v3 } from 'googleapis';
 import { GDriveOptions, GithubOptions } from '../types/types';
 import { createDriveClient, getDriveFolder, uploadFiles } from './gDrive/drive';
 import {
@@ -85,3 +85,4 @@ export default class Upload {
     return uploadedFiles;
   }
 }
+ */

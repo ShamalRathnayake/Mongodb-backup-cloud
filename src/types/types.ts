@@ -68,6 +68,7 @@ export type CommonOptions = {
   oldBackupPath?: string;
   /**
    * Number of days to keep previous backups.
+   *
    * backups made before the specified number of days will be removed
    * - default - 7days
    */
@@ -202,3 +203,252 @@ export type SearchResultResponse = {
   incompleteSearch: boolean;
   files: PartialDriveFile[];
 };
+
+export type BackupOptions = {
+  /**
+   * Increase the verbosity of the output.
+   *
+   * Use 1 through 5 to increase the verbosity level.
+   * - Example: 2
+   */
+  verbose?: number;
+
+  /**
+   * Suppress all non-error messages.
+   * - Example: true
+   */
+  quiet?: boolean;
+
+  /**
+   * MongoDB server host to connect to.
+   * - Example: "localhost"
+   */
+  host: string;
+
+  /**
+   * MongoDB server port to connect to.
+   * - Example: 27017
+   */
+  port: number;
+
+  /**
+   * Use SSL/TLS for the connection.
+   * - Example: true
+   */
+  ssl?: boolean;
+
+  /**
+   * Specifies the .pem file containing the root certificate chain from the certificate authority.
+   * - Example: "/path/to/ca.pem"
+   */
+  sslCAFile?: string;
+
+  /**
+   * Specifies the .pem file containing the client certificate or public key and private key used for authentication, if required by the server.
+   * - Example: "/path/to/client.pem"
+   */
+  sslPEMKeyFile?: string;
+
+  /**
+   * Specifies the password to decrypt the private key in the SSL certificate specified by sslPEMKeyFile.
+   * - Example: "password"
+   */
+  sslPEMKeyPassword?: string;
+
+  /**
+   * Specifies the .pem file containing the certificate revocation list.
+   * - Example: "/path/to/crl.pem"
+   */
+  sslCRLFile?: string;
+
+  /**
+   * Allows connections to servers with self-signed certificates or certificates that are not properly signed by a certificate authority.
+   * - Example: true
+   */
+  sslAllowInvalidCertificates?: boolean;
+
+  /**
+   * Allows connections to servers whose hostname does not match the name specified by the sslPEMKeyFile or the host parameter.
+   * - Example: true
+   */
+  sslAllowInvalidHostnames?: boolean;
+
+  /**
+   * Specifies the username for authentication.
+   * - Example: "admin"
+   */
+  username?: string;
+
+  /**
+   * Specifies the password for authentication.
+   * - Example: "password123"
+   */
+  password?: string;
+
+  /**
+   * Specifies the session token for authentication with MongoDB Atlas.
+   * - Example: "abcdefg"
+   */
+  awsSessionToken?: string;
+
+  /**
+   * Specifies the authentication database.
+   * - Example: "admin"
+   */
+  authenticationDatabase?: string;
+
+  /**
+   * Specifies the authentication mechanism to use.
+   * - Example: "SCRAM-SHA-256"
+   */
+  authenticationMechanism?: string;
+
+  /**
+   * Specifies the GSSAPI service name.
+   * - Example: "mongod"
+   */
+  gssapiServiceName?: string;
+
+  /**
+   * Specifies the GSSAPI host name.
+   * - Example: "mongodb.example.com"
+   */
+  gssapiHostName?: string;
+
+  /**
+   * Specifies the database name.
+   * - Example: "mydatabase"
+   */
+  db?: string;
+
+  /**
+   * Specifies the collection name.
+   * - Example: "mycollection"
+   */
+  collection?: string;
+
+  /**
+   * Specifies a query filter in MongoDB Extended JSON format.
+   * - Example: '{"name": "John"}'
+   */
+  query?: string;
+
+  /**
+   * Specifies the path to a file containing a query filter in MongoDB Extended JSON format.
+   * - Example: "/path/to/query.json"
+   */
+  queryFile?: string;
+
+  /**
+   * Specifies the read preference for the MongoDB query.
+   * - Example: "secondary"
+   */
+  readPreference?: string;
+
+  /**
+   * Compresses the output data using GZIP compression.
+   * - Example: true
+   */
+  gzip?: boolean;
+
+  /**
+   * Dumps the oplog for point-in-time restores.
+   * - Example: true
+   */
+  oplog?: boolean;
+
+  /**
+   * Dumps user and role definitions for the specified database.
+   * - Example: true
+   */
+  dumpDbUsersAndRoles?: boolean;
+
+  /**
+   * Excludes the specified collection from the dump operation.
+   * - Example: ["collection1", "collection2"]
+   */
+  excludeCollection?: string[];
+
+  /**
+   * Excludes collections with the specified prefix from the dump operation.
+   * - Example: ["prefix1", "prefix2"]
+   */
+  excludeCollectionsWithPrefix?: string[];
+
+  /**
+   * Specifies the number of collections to dump in parallel. Default is 4.
+   * - Example: 8
+   */
+  numParallelCollections?: number;
+
+  /**
+   * Treats views as collections and includes them in the dump operation.
+   * - Example: true
+   */
+  viewsAsCollections?: boolean;
+
+  /**
+   * Specifies the output directory or file.
+   * - Example: "/path/to/output"
+   */
+  out?: string;
+
+  /**
+   * Creates a single archive file of the dumped data.
+   * - Example: "/path/to/archive"
+   */
+  archive?: string;
+
+  /**
+   * File extension of the archive file.
+   *
+   * Must be used with *archive* option
+   * - Example: '.zip'
+   */
+  archiveExtension?: string;
+
+  /**
+   * Backup mongodb instance using a cron schedule.
+   * cron syntax string
+   * - Example: "* * 00 * * *"
+   */
+  schedule?: string;
+
+  /**
+   * Callback function to run after every scheduled backup process completion
+   * - returns output object
+   */
+  // eslint-disable-next-line no-unused-vars
+  scheduleCallback?: (...args: any[]) => any;
+
+  /**
+   * Remove previous backups
+   *  - default - false
+   */
+  removeOldBackups?: boolean;
+
+  /**
+   * Remove entire directory containing previous backups
+   *  - default - false
+   */
+  removeOldDir?: boolean;
+
+  /**
+   * (**OPTIONAL -Use only if old backups are in a different directory from your backup directory)
+   *
+   * Relative path to the previous backup that should be removed
+   *
+   * can be used with removeOldDir to remove entire folder
+   */
+  oldBackupPath?: string;
+
+  /**
+   * Number of days to keep previous backups.
+   *
+   * backups made before the specified number of days will be removed
+   * - default - 7days
+   */
+  localBackupRange?: number;
+};
+
+export type StringArray = Array<string>;
