@@ -1,4 +1,4 @@
-import deleteConfig from '../backup/config/deleteConfig';
+import deleteConfig from '../../backup/config/deleteConfig';
 
 export default class TimestampGenerator {
   private static date = new Date();

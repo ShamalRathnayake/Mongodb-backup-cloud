@@ -204,6 +204,8 @@ export type SearchResultResponse = {
   files: PartialDriveFile[];
 };
 
+/* ---------------------------------------------------------------------------- */
+
 export type BackupOptions = {
   /**
    * Increase the verbosity of the output.
@@ -212,6 +214,25 @@ export type BackupOptions = {
    * - Example: 2
    */
   verbose?: number;
+
+  /**
+   * Specifies the full path to a YAML configuration file containing sensitive values for the following options to mongodump:
+
+  -  --password
+
+  -  --uri
+
+  -  --sslPEMKeyPassword
+   *
+   * Using these options individually as option fields is not necessary when using config option
+   * 
+   * the YAML file structure should be similar to following :-
+   * 
+   * - password: \<password>
+   * - uri: mongodb://mongodb0.example.com:27017
+   * - sslPEMKeyPassword: \<password>
+   */
+  config?: string;
 
   /**
    * Suppress all non-error messages.
@@ -452,3 +473,11 @@ export type BackupOptions = {
 };
 
 export type StringArray = Array<string>;
+
+export type PathOptions = {
+  parentDirectory: string;
+  backupPath: string;
+  backupDirectory: string;
+  oldBackupPath: string;
+  oldBackupDirectory: string;
+};

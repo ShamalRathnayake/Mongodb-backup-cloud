@@ -1,6 +1,6 @@
 import { createLogger, format, Logger } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import logConfig from '../backup/config/logConfig';
+import logConfig from '../../backup/config/logConfig';
 
 abstract class BaseLogger {
   protected logger: Logger | null;
@@ -21,7 +21,7 @@ abstract class BaseLogger {
     const transportOptions = {
       filename: this.getLogFileName(),
       dirname: this.getLogFilePath(),
-      datePattern: 'YYYY-MM-DD-HH',
+      datePattern: 'YYYY-MM-DD',
       zippedArchive: true,
       maxSize: '20m',
       maxFiles: '14d',

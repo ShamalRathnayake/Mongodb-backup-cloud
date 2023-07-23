@@ -1,17 +1,17 @@
-import { BackupLogger } from '../../common/logger';
-import { BackupOptions } from '../../types/types';
-import backupConfig from '../config/backupConfig';
-import deleteConfig from '../config/deleteConfig';
-import directoryConfig from '../config/directoryConfig';
-import logConfig from '../config/logConfig';
-import scheduleConfig from '../config/scheduleConfig';
-import typeConfig from '../config/typeConfig';
+import { BackupLogger } from '../../../common/Logger/logger';
+import { BackupOptions } from '../../../types/types';
+import backupConfig from '../../config/backupConfig';
+import deleteConfig from '../../config/deleteConfig';
+import directoryConfig from '../../config/directoryConfig';
+import logConfig from '../../config/logConfig';
+import scheduleConfig from '../../config/scheduleConfig';
+import typeConfig from '../../config/typeConfig';
 import {
   InvalidOptionError,
   InvalidValueForOptionError,
   OptionRequiredError,
   OptionRequiredToUseError,
-} from './errorHandler';
+} from '../errorHandler/errorHandler';
 
 export default class OptionsValidator {
   private static instance: OptionsValidator;
@@ -28,8 +28,10 @@ export default class OptionsValidator {
 
   public validateOptions(options: BackupOptions): void {
     BackupLogger.log(logConfig.types.debug, 'Starting options validation');
-    if (!options.host || options.host === '') throw new OptionRequiredError(`host`);
-    if (!options.port || isNaN(options.port)) throw new OptionRequiredError(`port`);
+    if (!options.config?.trim() && (!options.host || options.host === ''))
+      throw new OptionRequiredError(`host`);
+    if (!options.config?.trim() && (!options.port || isNaN(options.port)))
+      throw new OptionRequiredError(`port`);
     if (options.query && !options.collection)
       throw new OptionRequiredToUseError('collection', 'query');
     if (options.verbose && (isNaN(options.verbose) || options.verbose > 5 || options.verbose < 1)) {
@@ -41,6 +43,14 @@ export default class OptionsValidator {
     if (options.archive && (!options.archiveExtension || !options.archiveExtension.trim())) {
       throw new OptionRequiredToUseError('archiveExtension', 'archive');
     }
+
+    if (
+      options.config?.trim() &&
+      (options.host || options.port || options.password || options.sslPEMKeyPassword)
+    )
+      throw new Error(
+        '`host` , `port` , `password` and `sslPEMKeyPassword` options are not required when using `config` option'
+      );
 
     for (const [key, value] of Object.entries(options)) {
       const configObject = this.getConfigObject(key);

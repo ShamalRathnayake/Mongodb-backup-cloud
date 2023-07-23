@@ -5,6 +5,10 @@ const backupConfig: Record<string, Record<string, any>> = {
     type: typeConfig.types.number,
     option: 'v',
   },
+  config: {
+    type: typeConfig.types.string,
+    option: '--config',
+  },
   quiet: {
     type: typeConfig.types.boolean,
     option: '--quiet',
