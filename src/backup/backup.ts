@@ -4,9 +4,10 @@ import CommandGenerator from './helpers/commandGenerator/commandGenerator';
 import logConfig from './config/logConfig';
 import { BackupLogger } from '../common/Logger/logger';
 import PathGenerator from '../common/pathGenerator/pathGenerator';
+import CommandExecutor from './helpers/commandExecutor/commandExecutor';
 
 export default class Backup {
-  private command: string;
+  private backupCommand: string;
   private deleteCommand: string;
   private paths: PathOptions;
 
@@ -25,14 +26,19 @@ export default class Backup {
 
       const commandGenerator = new CommandGenerator(options, this.paths);
 
-      this.command = commandGenerator.getCommand();
-      console.log('🚀 ~ file: backup.ts:27 ~ Backup ~ constructor ~ this.command:', this.command);
+      this.backupCommand = commandGenerator.getBackupCommand();
+      console.log(
+        '🚀 ~ file: backup.ts:27 ~ Backup ~ constructor ~ this.command:',
+        this.backupCommand
+      );
 
       this.deleteCommand = commandGenerator.getDeleteCommand();
       console.log(
         '🚀 ~ file: backup.ts:32 ~ Backup ~ constructor ~ this.deleteCommand :',
         this.deleteCommand
       );
+
+      this.executeCommands();
     } catch (error: any) {
       BackupLogger.log(logConfig.types.error, error.message);
       throw error;
@@ -40,6 +46,16 @@ export default class Backup {
   }
 
   public print() {
-    return this.command;
+    return this.backupCommand;
+  }
+
+  private async executeCommands(): Promise<void> {
+    const backupStatus = await CommandExecutor.executeCommand(this.backupCommand);
+    console.log('🚀 ~ file: backup.ts:42 ~ Backup ~ constructor ~ backupStatus:', backupStatus);
+
+    const deleteStatus = await CommandExecutor.executeCommand(this.deleteCommand);
+    console.log('🚀 ~ file: backup.ts:46 ~ Backup ~ constructor ~ deleteStatus:', deleteStatus);
   }
 }
+
+//TODO change process to backup from schedule
