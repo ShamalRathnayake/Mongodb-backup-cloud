@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CommandGenerator getBackupCommand snapshot 1`] = `"mongodump --host=localhost --port=27017 --ssl --quiet --oplog"`;
+
+exports[`CommandGenerator getDeleteCommand snapshot 1`] = `""`;

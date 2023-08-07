@@ -1,9 +1,12 @@
+/* eslint-disable max-classes-per-file */
 import { createLogger, format, Logger } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+
 import logConfig from '../../backup/config/logConfig';
 
 abstract class BaseLogger {
   protected logger: Logger | null;
+
   protected isLoggingEnabled: boolean;
 
   protected constructor() {
@@ -48,7 +51,9 @@ abstract class BaseLogger {
   }
 
   protected abstract getLogFileName(): string;
+
   protected abstract getLogFilePath(): string;
+
   protected abstract getServiceName(): string;
 
   public log(level: string, message: string): void {
@@ -59,6 +64,7 @@ abstract class BaseLogger {
 }
 
 export class BackupLogger extends BaseLogger {
+  // eslint-disable-next-line no-use-before-define
   private static instance: BackupLogger = new BackupLogger();
 
   private constructor() {
@@ -66,6 +72,7 @@ export class BackupLogger extends BaseLogger {
   }
 
   protected getLogFileName(): string {
+    // eslint-disable-next-line quotes
     return `backup-%DATE%.log`;
   }
 
@@ -87,6 +94,7 @@ export class BackupLogger extends BaseLogger {
 }
 
 export class UploadLogger extends BaseLogger {
+  // eslint-disable-next-line no-use-before-define
   private static instance: UploadLogger = new UploadLogger();
 
   private constructor() {
@@ -94,6 +102,7 @@ export class UploadLogger extends BaseLogger {
   }
 
   protected getLogFileName(): string {
+    // eslint-disable-next-line quotes
     return `upload-%DATE%.log`;
   }
 

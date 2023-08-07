@@ -6,7 +6,6 @@
   "extends": [
     "airbnb-base",
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -14,13 +13,36 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
     "prettier/prettier": "error",
     "no-unused-vars": "error",
-    "import/extensions": ["never"]
+    "import/extensions": [0],
+    "import/no-unresolved": "error",
+    "import/exports-last": ["error"],
+    "import/newline-after-import": ["error", { "count": 1 }],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", ["sibling", "parent"], "index", "unknown"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "quotes": ["error", "single"],
+    "no-useless-constructor": 0,
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/no-inferrable-types": 0,
+    "class-methods-use-this": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   }
 }

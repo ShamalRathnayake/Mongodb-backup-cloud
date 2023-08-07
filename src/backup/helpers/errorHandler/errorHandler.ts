@@ -1,6 +1,8 @@
+/* eslint-disable max-classes-per-file */
 class OptionRequiredError extends Error {
   constructor(optionName: string) {
     super(`${optionName} is required`);
+    Object.setPrototypeOf(this, OptionRequiredError.prototype);
     this.name = 'OptionRequiredError';
   }
 }
@@ -8,6 +10,7 @@ class OptionRequiredError extends Error {
 class InvalidOptionError extends Error {
   constructor(optionName: string) {
     super(`Invalid option: ${optionName}`);
+    Object.setPrototypeOf(this, InvalidOptionError.prototype);
     this.name = 'InvalidOptionError';
   }
 }
@@ -15,6 +18,7 @@ class InvalidOptionError extends Error {
 class InvalidValueForOptionError extends Error {
   constructor(optionName: string, option: unknown) {
     super(`Invalid value for ${optionName}: ${option}`);
+    Object.setPrototypeOf(this, InvalidValueForOptionError.prototype);
     this.name = 'InvalidValueForOptionError';
   }
 }
@@ -22,6 +26,7 @@ class InvalidValueForOptionError extends Error {
 class OptionRequiredToUseError extends Error {
   constructor(requiredOption: string, givenOption: string) {
     super(`${requiredOption} option is required to use ${givenOption} option`);
+    Object.setPrototypeOf(this, OptionRequiredToUseError.prototype);
     this.name = 'OptionRequiredToUseError';
   }
 }

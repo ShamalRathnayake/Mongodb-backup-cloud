@@ -1,61 +1,89 @@
-import OptionsValidator from './helpers/optionsValidator/optionsValidator';
-import { BackupOptions, PathOptions } from '../types/types';
-import CommandGenerator from './helpers/commandGenerator/commandGenerator';
-import logConfig from './config/logConfig';
+import cron from 'node-cron';
+
 import { BackupLogger } from '../common/Logger/logger';
 import PathGenerator from '../common/pathGenerator/pathGenerator';
+import { BackupOptions, PathOptions } from '../types/types';
+import logConfig from './config/logConfig';
 import CommandExecutor from './helpers/commandExecutor/commandExecutor';
+import CommandGenerator from './helpers/commandGenerator/commandGenerator';
+import OptionsValidator from './helpers/optionsValidator/optionsValidator';
 
 export default class Backup {
-  private backupCommand: string;
-  private deleteCommand: string;
-  private paths: PathOptions;
+  private backupCommand: string = '';
+
+  private deleteCommand: string = '';
+
+  private paths: PathOptions = {
+    parentDirectory: '',
+    backupPath: '',
+    backupDirectory: '',
+    oldBackupPath: '',
+    oldBackupDirectory: '',
+  };
+
+  private options: BackupOptions;
 
   constructor(options: BackupOptions, enableLogs: boolean = false) {
     if (enableLogs) BackupLogger.toggleLogging(true);
 
     try {
-      BackupLogger.log(logConfig.types.debug, 'Backup process started');
-
       OptionsValidator.validate(options);
 
-      const pathGenerator = new PathGenerator(options);
+      this.options = options;
+    } catch (error: unknown) {
+      let errorMsg: string = 'Unknown error occurred.';
 
-      this.paths = pathGenerator.getPaths();
-      console.log('🚀 ~ file: backup.ts:26 ~ Backup ~ constructor ~ this.paths:', this.paths);
+      if (error instanceof Error) errorMsg = error.message;
+      else if (typeof error === 'string') errorMsg = error;
 
-      const commandGenerator = new CommandGenerator(options, this.paths);
-
-      this.backupCommand = commandGenerator.getBackupCommand();
-      console.log(
-        '🚀 ~ file: backup.ts:27 ~ Backup ~ constructor ~ this.command:',
-        this.backupCommand
-      );
-
-      this.deleteCommand = commandGenerator.getDeleteCommand();
-      console.log(
-        '🚀 ~ file: backup.ts:32 ~ Backup ~ constructor ~ this.deleteCommand :',
-        this.deleteCommand
-      );
-
-      this.executeCommands();
-    } catch (error: any) {
-      BackupLogger.log(logConfig.types.error, error.message);
+      BackupLogger.log(logConfig.types.error, errorMsg);
       throw error;
     }
   }
 
-  public print() {
-    return this.backupCommand;
-  }
-
-  private async executeCommands(): Promise<void> {
+  private async executeCommands() {
     const backupStatus = await CommandExecutor.executeCommand(this.backupCommand);
-    console.log('🚀 ~ file: backup.ts:42 ~ Backup ~ constructor ~ backupStatus:', backupStatus);
 
     const deleteStatus = await CommandExecutor.executeCommand(this.deleteCommand);
-    console.log('🚀 ~ file: backup.ts:46 ~ Backup ~ constructor ~ deleteStatus:', deleteStatus);
+
+    return { backupStatus, deleteStatus };
+  }
+
+  private async prepareBackupProcess(options: BackupOptions) {
+    const pathGenerator = new PathGenerator(options);
+
+    this.paths = pathGenerator.getPaths();
+
+    const commandGenerator = new CommandGenerator(options, this.paths);
+
+    this.backupCommand = commandGenerator.getBackupCommand();
+    this.deleteCommand = commandGenerator.getDeleteCommand();
+  }
+
+  public async handleBackupProcess() {
+    BackupLogger.log(logConfig.types.debug, 'Backup process started');
+    if (this.options.schedule) {
+      cron.schedule(this.options.schedule, async () => {
+        await this.prepareBackupProcess(this.options);
+        const { backupStatus, deleteStatus } = await this.executeCommands();
+
+        const returnObject = {
+          paths: this.paths,
+          backupStatus,
+          deleteStatus,
+        };
+        BackupLogger.log(logConfig.types.debug, 'Backup process finished');
+        if (this.options.scheduleCallback) return this.options.scheduleCallback(returnObject);
+        return returnObject;
+      });
+    }
+    await this.prepareBackupProcess(this.options);
+    const { backupStatus, deleteStatus } = await this.executeCommands();
+    BackupLogger.log(logConfig.types.debug, 'Backup process finished');
+    return {
+      paths: this.paths,
+      backupStatus,
+      deleteStatus,
+    };
   }
 }
-
-//TODO change process to backup from schedule

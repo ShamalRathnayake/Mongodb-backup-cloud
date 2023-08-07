@@ -1,3 +1,7 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-restricted-syntax */
+import * as cron from 'node-cron';
+
 import { BackupLogger } from '../../../common/Logger/logger';
 import { BackupOptions } from '../../../types/types';
 import backupConfig from '../../config/backupConfig';
@@ -14,6 +18,7 @@ import {
 } from '../errorHandler/errorHandler';
 
 export default class OptionsValidator {
+  // eslint-disable-next-line no-use-before-define
   private static instance: OptionsValidator;
 
   private constructor() {}
@@ -26,16 +31,22 @@ export default class OptionsValidator {
     OptionsValidator.instance.validateOptions(options);
   }
 
-  public validateOptions(options: BackupOptions): void {
+  private validateOptions(options: BackupOptions): void {
     BackupLogger.log(logConfig.types.debug, 'Starting options validation');
     if (!options.config?.trim() && (!options.host || options.host === ''))
-      throw new OptionRequiredError(`host`);
-    if (!options.config?.trim() && (!options.port || isNaN(options.port)))
-      throw new OptionRequiredError(`port`);
+      throw new OptionRequiredError('host');
+    if (!options.config?.trim() && (!options.port || Number.isNaN(options.port)))
+      throw new OptionRequiredError('port');
     if (options.query && !options.collection)
       throw new OptionRequiredToUseError('collection', 'query');
-    if (options.verbose && (isNaN(options.verbose) || options.verbose > 5 || options.verbose < 1)) {
-      throw new Error('verbose option can only be a value between 1 and 5');
+    if (
+      options.verbose &&
+      (Number.isNaN(options.verbose) || options.verbose > 5 || options.verbose < 1)
+    ) {
+      throw new InvalidValueForOptionError(
+        'verbose',
+        'verbose option can only be a value between 1 and 5'
+      );
     }
     if (options.out && options.archive) {
       throw new Error('both out and archive options cannot be used at once');
@@ -72,25 +83,30 @@ export default class OptionsValidator {
     BackupLogger.log(logConfig.types.debug, 'Options validation complete');
   }
 
-  private getConfigObject(key: string): Record<string, Record<string, any>> | null {
+  private getConfigObject(key: string): Record<string, Record<string, unknown>> | null {
     if (backupConfig.hasOwnProperty(key)) {
       return backupConfig;
-    } else if (directoryConfig.hasOwnProperty(key)) {
-      return directoryConfig;
-    } else if (scheduleConfig.hasOwnProperty(key)) {
-      return scheduleConfig;
-    } else if (deleteConfig.hasOwnProperty(key)) {
-      return deleteConfig;
-    } else {
-      return null;
     }
+    if (directoryConfig.hasOwnProperty(key)) {
+      return directoryConfig;
+    }
+    if (scheduleConfig.hasOwnProperty(key)) {
+      return scheduleConfig;
+    }
+    if (deleteConfig.hasOwnProperty(key)) {
+      return deleteConfig;
+    }
+    return null;
   }
 
   private validateOption(optionValue: unknown, optionName: string, optionType: any): void {
     if (
       typeof optionValue !== optionType ||
+      (optionType === typeConfig.types.string &&
+        optionName === scheduleConfig.schedule.key &&
+        !cron.validate(optionValue as string)) ||
       (optionType === typeConfig.types.string && (optionValue as any).trim() === '') ||
-      (optionType === typeConfig.types.number && isNaN(optionValue as any))
+      (optionType === typeConfig.types.number && Number.isNaN(optionValue as any))
     )
       throw new InvalidValueForOptionError(optionName, optionValue);
   }

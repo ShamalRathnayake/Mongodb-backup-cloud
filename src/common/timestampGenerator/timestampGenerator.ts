@@ -1,12 +1,13 @@
 import deleteConfig from '../../backup/config/deleteConfig';
 
 export default class TimestampGenerator {
-  private static date = new Date();
+  private date;
 
-  private constructor() {}
+  constructor() {
+    this.date = new Date();
+  }
 
-  public static generateTimestamp(time: boolean = false, newDate: boolean = false) {
-    if (newDate) this.date = new Date();
+  public generateTimestamp(time: boolean = false) {
     if (time) {
       return `${`0${new Date(this.date).getHours()}`.slice(-2)}H_${`0${new Date(
         this.date
@@ -18,13 +19,10 @@ export default class TimestampGenerator {
     }
   }
 
-  public static generateRangeTimestamp(
+  public generateRangeTimestamp(
     time: boolean = false,
-    newDate: boolean = false,
     range: number = deleteConfig.localBackupRange.default
   ) {
-    if (newDate) this.date = new Date();
-
     const date = new Date(this.date);
     const previousBackupDate = new Date(date.setDate(date.getDate() - range));
 

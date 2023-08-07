@@ -1,14 +1,18 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-prototype-builtins */
 import { lstatSync } from 'fs';
+
+import { BackupLogger } from '../../../common/Logger/logger';
 import { BackupOptions, PathOptions } from '../../../types/types';
 import backupConfig from '../../config/backupConfig';
 import deleteConfig from '../../config/deleteConfig';
 import directoryConfig from '../../config/directoryConfig';
-import typeConfig from '../../config/typeConfig';
-import { BackupLogger } from '../../../common/Logger/logger';
 import logConfig from '../../config/logConfig';
+import typeConfig from '../../config/typeConfig';
 
 export default class CommandGenerator {
-  private optionString: string = 'mongodump ';
+  private optionString: string = 'mongodump';
+
   private deleteCommand: string = '';
 
   constructor(options: BackupOptions, pathOptions: PathOptions) {
@@ -50,6 +54,8 @@ export default class CommandGenerator {
           value as Array<string>
         );
         break;
+      default:
+        break;
     }
   }
 
@@ -65,6 +71,9 @@ export default class CommandGenerator {
 
       case directoryConfig.archive.key:
         this.optionString += ` ${directoryConfig.archive.option}=${pathOptions.backupPath}.${options.archiveExtension}`;
+        break;
+
+      default:
         break;
     }
   }
@@ -124,9 +133,8 @@ export default class CommandGenerator {
       return process.platform === 'win32'
         ? `rmdir /Q /S ${path.replace(/\//g, '\\')}`
         : `rm -rf ${path}`;
-    } else {
-      return process.platform === 'win32' ? `del /f ${path.replace(/\//g, '\\')}` : `rm -f ${path}`;
     }
+    return process.platform === 'win32' ? `del /f ${path.replace(/\//g, '\\')}` : `rm -f ${path}`;
   }
 
   public getBackupCommand(): string {

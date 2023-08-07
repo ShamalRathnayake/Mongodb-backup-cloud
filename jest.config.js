@@ -14,7 +14,7 @@ module.exports = {
   // cacheDirectory: "C:\\Users\\Shamal\\AppData\\Local\\Temp\\jest",
 
   // Automatically clear mock calls, instances and results before every test
-  // clearMocks: false,
+  clearMocks: false,
 
   // Indicates whether the coverage information should be collected while executing the test
   // collectCoverage: true,
@@ -102,7 +102,7 @@ module.exports = {
   // reporters: undefined,
 
   // Automatically reset mock state before every test
-  // resetMocks: false,
+  resetMocks: false,
 
   // Reset the module registry before running each individual test
   // resetModules: false,
@@ -186,7 +186,7 @@ module.exports = {
   // unmockedModulePathPatterns: undefined,
 
   // Indicates whether each individual test should be reported during the run
-   verbose: true,
+  verbose: true,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
   // watchPathIgnorePatterns: [],

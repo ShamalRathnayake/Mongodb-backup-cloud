@@ -472,8 +472,6 @@ export type BackupOptions = {
   localBackupRange?: number;
 };
 
-export type StringArray = Array<string>;
-
 export type PathOptions = {
   parentDirectory: string;
   backupPath: string;
@@ -481,3 +479,5 @@ export type PathOptions = {
   oldBackupPath: string;
   oldBackupDirectory: string;
 };
+
+export type StringArray = Array<string>;

@@ -2,7 +2,7 @@ import { Backup } from './src/index';
 
 const backupOptions = {
   verbose: 2,
-  //config: './backup/path/to/config.yaml',
+  // config: './backup/path/to/config.yaml',
   /* quiet: true, */
   host: 'localhost',
   port: 27017,
@@ -33,17 +33,18 @@ const backupOptions = {
   numParallelCollections: 8,
   viewsAsCollections: true, */
   out: './backup',
-  //archive: './backup',
+  // archive: './backup',
   /* archiveExtension: '.zip', */
-  //schedule: '* * 00 * * *',
-  //scheduleCallback: (...args) => {
+  schedule: '* * 00 * * *',
+  // scheduleCallback: (...args) => {
   // Your schedule callback function logic here
-  //},
+  // },
   removeOldBackups: true,
   removeOldDir: false,
-  //oldBackupPath: '/path/to/old/backup',
+  // oldBackupPath: '/path/to/old/backup',
   localBackupRange: 7,
 };
 
 const backup = new Backup(backupOptions, true);
-backup.print();
+backup.handleBackupProcess();
+console.log('🚀 ~ file: check.ts:49 ~ backup:', backup);

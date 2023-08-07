@@ -1,20 +1,27 @@
-import config from '../../backup/config/config';
-import { BackupOptions, PathOptions } from '../../types/types';
 import * as fs from 'fs';
-import { BackupLogger } from '../Logger/logger';
-import logConfig from '../../backup/config/logConfig';
-import TimestampGenerator from '../timestampGenerator/timestampGenerator';
 import { join } from 'path';
+
+import config from '../../backup/config/config';
+import logConfig from '../../backup/config/logConfig';
+import { BackupOptions, PathOptions } from '../../types/types';
+import { BackupLogger } from '../Logger/logger';
+import TimestampGenerator from '../timestampGenerator/timestampGenerator';
 
 export default class PathGenerator {
   private parentDirectory: string = '';
+
   private backupPath: string = '';
+
   private backupDirectory: string = '';
+
   private oldBackupPath: string = '';
+
   private oldBackupDirectory: string = '';
 
+  private timestampGenerator = new TimestampGenerator();
+
   constructor(options: BackupOptions) {
-    BackupLogger.log(logConfig.types.debug, `Starting path generation`);
+    BackupLogger.log(logConfig.types.debug, 'Starting path generation');
 
     if (!options.out && !options.archive) {
       BackupLogger.log(
@@ -41,20 +48,16 @@ export default class PathGenerator {
       if (!options.oldBackupPath || !options.oldBackupPath.trim()) {
         this.oldBackupDirectory = join(
           this.parentDirectory,
-          TimestampGenerator.generateRangeTimestamp(
-            false,
-            false,
-            options.localBackupRange || undefined
-          ).trim()
+          this.timestampGenerator
+            .generateRangeTimestamp(false, options.localBackupRange || undefined)
+            .trim()
         );
 
         this.oldBackupPath = join(
           this.oldBackupDirectory,
-          TimestampGenerator.generateRangeTimestamp(
-            true,
-            false,
-            options.localBackupRange || undefined
-          ).trim()
+          this.timestampGenerator
+            .generateRangeTimestamp(true, options.localBackupRange || undefined)
+            .trim()
         );
       } else {
         this.oldBackupDirectory = options.oldBackupPath;
@@ -62,7 +65,7 @@ export default class PathGenerator {
       }
     }
 
-    BackupLogger.log(logConfig.types.debug, `Path generation complete`);
+    BackupLogger.log(logConfig.types.debug, 'Path generation complete');
   }
 
   public getPaths(): PathOptions {
@@ -94,7 +97,7 @@ export default class PathGenerator {
     if (!parentPath || !parentPath.trim()) {
       BackupLogger.log(
         logConfig.types.error,
-        `Invalid value for parentPath at createPath in PathGenerator`
+        'Invalid value for parentPath at createPath in PathGenerator'
       );
       throw new Error();
     }
@@ -102,8 +105,8 @@ export default class PathGenerator {
     return this.dirCheck(
       join(
         parentPath,
-        withDate ? TimestampGenerator.generateTimestamp() : '',
-        withTime ? TimestampGenerator.generateTimestamp(true) : ''
+        withDate ? this.timestampGenerator.generateTimestamp() : '',
+        withTime ? this.timestampGenerator.generateTimestamp(true) : ''
       )
     ).trim();
   }

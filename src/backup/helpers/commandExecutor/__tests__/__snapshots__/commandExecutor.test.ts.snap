@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Command Executor matches snapshot for executeCommand output 1`] = `
+{
+  "log": "stdout is not defined",
+  "status": false,
+}
+`;
+
+exports[`Command Executor matches snapshot for logConfig 1`] = `
+{
+  "backupLogPath": "mongodb-backup-cloud-logs/backup",
+  "types": {
+    "debug": "debug",
+    "error": "error",
+    "info": "info",
+    "warn": "warn",
+  },
+  "uploadLogPath": "mongodb-backup-cloud-logs/upload",
+}
+`;
