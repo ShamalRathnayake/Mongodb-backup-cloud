@@ -6,7 +6,7 @@ import {
   OptionRequiredError,
   OptionRequiredToUseError,
 } from '../../errorHandler/errorHandler';
-import OptionsValidator from '../optionsValidator'; // Adjust the import path as needed
+import OptionsValidator from '../optionsValidator';
 
 describe('OptionsValidator', () => {
   describe('validateOptions', () => {

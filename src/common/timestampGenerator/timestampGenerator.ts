@@ -12,11 +12,10 @@ export default class TimestampGenerator {
       return `${`0${new Date(this.date).getHours()}`.slice(-2)}H_${`0${new Date(
         this.date
       ).getMinutes()}`.slice(-2)}M_${`0${new Date(this.date).getSeconds()}`.slice(-2)}S`;
-    } else {
-      return `${new Date(this.date).getFullYear()}_${new Date(this.date).getMonth() + 1}_${new Date(
-        this.date
-      ).getDate()}`;
     }
+    return `${new Date(this.date).getFullYear()}_${new Date(this.date).getMonth() + 1}_${new Date(
+      this.date
+    ).getDate()}`;
   }
 
   public generateRangeTimestamp(
@@ -30,10 +29,9 @@ export default class TimestampGenerator {
       return `${`0${new Date(previousBackupDate).getHours()}`.slice(-2)}H_${`0${new Date(
         previousBackupDate
       ).getMinutes()}`.slice(-2)}M_${`0${new Date(previousBackupDate).getSeconds()}`.slice(-2)}S`;
-    } else {
-      return `${new Date(previousBackupDate).getFullYear()}_${
-        new Date(previousBackupDate).getMonth() + 1
-      }_${new Date(previousBackupDate).getDate()}`;
     }
+    return `${new Date(previousBackupDate).getFullYear()}_${
+      new Date(previousBackupDate).getMonth() + 1
+    }_${new Date(previousBackupDate).getDate()}`;
   }
 }

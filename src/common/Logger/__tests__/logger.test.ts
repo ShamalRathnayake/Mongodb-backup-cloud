@@ -2,50 +2,53 @@
 // @ts-nocheck
 
 import { BackupLogger, UploadLogger } from '../logger';
-import { createLogger, format } from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
-
-jest.mock('winston', () => ({
-  createLogger: jest.fn(),
-  format: {
-    combine: jest.fn(),
-    timestamp: jest.fn(),
-    printf: jest.fn(),
-    colorize: jest.fn(),
-    align: jest.fn(),
-  },
-}));
-
-jest.mock('winston-daily-rotate-file', () => jest.fn());
 
 describe('BackupLogger', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+  it('should toggle logging status', () => {
+    BackupLogger.toggleLogging(true);
+    expect(BackupLogger.instance.isLoggingEnabled).toBe(true);
+
+    BackupLogger.toggleLogging(false);
+    expect(BackupLogger.instance.isLoggingEnabled).toBe(false);
   });
 
-  it('should toggle logging and log via static methods', () => {
+  it('should log when logging is enabled', () => {
     BackupLogger.toggleLogging(true);
-
-    const mockLoggerInstance = createLogger.mock.results[0].value;
-    expect(mockLoggerInstance).toBeDefined();
-
+    const spy = jest.spyOn(BackupLogger.instance, 'log');
     BackupLogger.log('info', 'Test message');
-    expect(mockLoggerInstance.log).toHaveBeenCalledWith('info', 'Test message');
+    expect(spy).toHaveBeenCalledWith('info', 'Test message');
+    spy.mockRestore();
+  });
+
+  it('should create a singleton instance', () => {
+    const logger1 = BackupLogger.instance;
+    const logger2 = BackupLogger.instance;
+
+    expect(logger1 === logger2).toBe(true);
   });
 });
 
 describe('UploadLogger', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+  it('should toggle logging status', () => {
+    UploadLogger.toggleLogging(true);
+    expect(UploadLogger.instance.isLoggingEnabled).toBe(true);
+
+    UploadLogger.toggleLogging(false);
+    expect(UploadLogger.instance.isLoggingEnabled).toBe(false);
   });
 
-  it('should toggle logging and log via static methods', () => {
+  it('should log when logging is enabled', () => {
     UploadLogger.toggleLogging(true);
-
-    const mockLoggerInstance = createLogger.mock.results[0].value;
-    expect(mockLoggerInstance).toBeDefined();
-
+    const spy = jest.spyOn(UploadLogger.instance, 'log');
     UploadLogger.log('info', 'Test message');
-    expect(mockLoggerInstance.log).toHaveBeenCalledWith('info', 'Test message');
+    expect(spy).toHaveBeenCalledWith('info', 'Test message');
+    spy.mockRestore();
+  });
+
+  it('should create a singleton instance', () => {
+    const logger1 = UploadLogger.instance;
+    const logger2 = UploadLogger.instance;
+
+    expect(logger1 === logger2).toBe(true);
   });
 });
