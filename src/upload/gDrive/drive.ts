@@ -43,7 +43,11 @@ export const getDriveFolder = async (driveClient: drive_v3.Drive, folderName: st
   return folder;
 };
 
-export const uploadFiles = async (driveClient: drive_v3.Drive, folder: drive_v3.Schema$File, filePath: string) => {
+export const uploadFiles = async (
+  driveClient: drive_v3.Drive,
+  folder: drive_v3.Schema$File,
+  filePath: string
+) => {
   if (!fs.existsSync(filePath)) throw new Error('File path does not exist');
   const isDirectory = fs.lstatSync(filePath).isDirectory();
   if (!isDirectory) {
@@ -56,7 +60,7 @@ export const uploadFiles = async (driveClient: drive_v3.Drive, folder: drive_v3.
     const allUploadedData: any = [];
     for (const _path of paths) {
       const parents = path.dirname(_path).split('/');
-      parents.shift()
+      parents.shift();
       const uploadedData = await uploadToDrive(driveClient, folder.id as string, _path, parents);
       allUploadedData.push(uploadedData);
     }
@@ -73,7 +77,7 @@ const uploadToDrive = async (
   const fileName = path.basename(filePath);
   const mimeType = mime.lookup(filePath);
   const fullPath = path.resolve(__dirname, path.relative(__dirname, filePath));
-  const fileContent = fs.readFileSync(fullPath, { encoding: 'base64' });
+  const fileContent = fs.createReadStream(fullPath);
   let parentFolder = folderId;
   if (parents.length > 0) {
     parentFolder = await createParentFolders(driveClient, parents, folderId);
@@ -102,7 +106,11 @@ const uploadToDrive = async (
   return data;
 };
 
-const createParentFolders = async (driveClient: drive_v3.Drive, parents: string[], parentId: string) => {
+const createParentFolders = async (
+  driveClient: drive_v3.Drive,
+  parents: string[],
+  parentId: string
+) => {
   let prevParentId = parentId;
 
   for (const parent of parents) {
