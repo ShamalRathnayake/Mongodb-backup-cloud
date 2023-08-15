@@ -3,3 +3,4 @@
 /backup
 /mongodb-backup=cloud-logs/
 mongodb-backup-cloud-logs/
+coverage
