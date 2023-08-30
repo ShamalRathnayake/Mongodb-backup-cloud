@@ -4,3 +4,5 @@
 /mongodb-backup=cloud-logs/
 mongodb-backup-cloud-logs/
 coverage
+/src/check.ts
+/check.ts

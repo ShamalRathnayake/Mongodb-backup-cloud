@@ -2,6 +2,12 @@
 /* eslint-disable no-restricted-syntax */
 import * as cron from 'node-cron';
 
+import {
+  InvalidOptionError,
+  InvalidValueForOptionError,
+  OptionRequiredError,
+  OptionRequiredToUseError,
+} from '../../../common/errorHandler/errorHandler';
 import { BackupLogger } from '../../../common/Logger/logger';
 import { BackupOptions } from '../../../types/types';
 import backupConfig from '../../config/backupConfig';
@@ -10,12 +16,6 @@ import directoryConfig from '../../config/directoryConfig';
 import logConfig from '../../config/logConfig';
 import scheduleConfig from '../../config/scheduleConfig';
 import typeConfig from '../../config/typeConfig';
-import {
-  InvalidOptionError,
-  InvalidValueForOptionError,
-  OptionRequiredError,
-  OptionRequiredToUseError,
-} from '../errorHandler/errorHandler';
 
 export default class OptionsValidator {
   // eslint-disable-next-line no-use-before-define

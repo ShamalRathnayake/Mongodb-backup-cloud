@@ -70,7 +70,9 @@ export default class CommandGenerator {
         break;
 
       case directoryConfig.archive.key:
-        this.optionString += ` ${directoryConfig.archive.option}=${pathOptions.backupPath}.${options.archiveExtension}`;
+        this.optionString += ` ${directoryConfig.archive.option}=${
+          pathOptions.backupPath
+        }.${options.archiveExtension?.replace('.', '')}`;
         break;
 
       default:

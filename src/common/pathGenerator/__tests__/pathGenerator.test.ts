@@ -7,7 +7,6 @@ import { BackupLogger } from '../../Logger/logger';
 import PathGenerator from '../pathGenerator';
 import * as fs from 'fs';
 
-// Mock Logger and TimestampGenerator if needed
 jest.mock('../../Logger/logger', () => ({
   BackupLogger: {
     log: jest.fn(),

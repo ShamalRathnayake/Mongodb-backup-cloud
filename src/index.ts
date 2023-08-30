@@ -1,4 +1,4 @@
 import Backup from './backup/backup';
-/* import Upload from './upload/upload'; */
+import DriveUploader from './upload/google-drive/driveUploader';
 
-export { Backup /* , Upload */ };
+export { Backup, DriveUploader };
