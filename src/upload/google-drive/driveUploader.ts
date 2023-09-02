@@ -119,13 +119,13 @@ class DriveUploader {
     // eslint-disable-next-line no-restricted-syntax
     for (const parent of parents) {
       // eslint-disable-next-line no-await-in-loop
-      const checkResult = await this.driveClient.files.list({
+      const folderListResult = await this.driveClient.files.list({
         q: `mimeType='application/vnd.google-apps.folder' and name='${parent}' and parents in '${immediateParent}' and trashed=false`,
         fields: 'files(id, name)',
       });
-      if (checkResult.status !== 200) throw new Error(checkResult.statusText);
+      if (folderListResult.status !== 200) throw new Error(folderListResult.statusText);
 
-      const folder = checkResult.data.files?.find((file) => file.name === parent);
+      const folder = folderListResult.data.files?.find((file) => file.name === parent);
 
       if (folder) {
         immediateParent = folder.id as string;
@@ -161,13 +161,16 @@ class DriveUploader {
       parentFolder = await this.createParentFolders(parents);
     }
 
-    const checkResult = await this.driveClient.files.list({
+    const fileListResult = await this.driveClient.files.list({
       q: `mimeType!='application/vnd.google-apps.folder' and name='${fileName}' and parents in '${parentFolder}' and trashed=false`,
       fields: 'files(id, name)',
     });
-    if (checkResult.status !== 200) throw new Error(checkResult.statusText);
-    const existingFile = checkResult.data.files?.find((file) => file.name === fileName);
-    if (existingFile) return `${filePath} already exists`;
+    if (fileListResult.status !== 200) throw new Error(fileListResult.statusText);
+    const existingFile = fileListResult.data.files?.find((file) => file.name === fileName);
+    if (existingFile) {
+      UploadLogger.log(logConfig.types.info, `${filePath} already exists on drive`);
+      return `${filePath} already exists`;
+    }
 
     UploadLogger.log(logConfig.types.info, `Starting upload of ${filePath}`);
     const { status, statusText, data } = await this.driveClient.files.create({

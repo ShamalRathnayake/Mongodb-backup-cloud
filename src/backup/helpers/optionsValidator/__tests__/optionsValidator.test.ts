@@ -5,7 +5,7 @@ import {
   InvalidValueForOptionError,
   OptionRequiredError,
   OptionRequiredToUseError,
-} from '../../errorHandler/errorHandler';
+} from '../../../../common/errorHandler/errorHandler';
 import OptionsValidator from '../optionsValidator';
 
 describe('OptionsValidator', () => {
