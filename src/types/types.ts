@@ -204,6 +204,30 @@ export type SearchResultResponse = {
   files: PartialDriveFile[];
 };
 
+export type DropBoxOptions = {
+  /**
+   * oAuth client id
+   */
+  clientId: string;
+  /**
+   * oAuth client secret
+   */
+  clientSecret: string;
+  /**
+   * oAuth authorization code
+   */
+  authCode: string;
+  /**
+   * Path to the file or directory that needs to be uploaded
+   */
+  filePath: string;
+  /**
+   * Dropbox root level folder name
+   * - folder will be created if it doesn't exist
+   */
+  dropboxFolderName: string;
+};
+
 /* ---------------------------------------------------------------------------- */
 
 export type BackupOptions = {
@@ -481,3 +505,13 @@ export type PathOptions = {
 };
 
 export type StringArray = Array<string>;
+
+export type DropboxConfiguration = {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  refresh_token: string;
+  scope: string;
+  uid: string;
+  account_id: string;
+};

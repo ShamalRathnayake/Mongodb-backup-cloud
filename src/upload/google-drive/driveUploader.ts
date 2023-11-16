@@ -194,7 +194,7 @@ class DriveUploader {
 
   public async upload() {
     try {
-      UploadLogger.log(logConfig.types.info, 'initializing drive uploader');
+      UploadLogger.log(logConfig.types.info, 'Initializing drive uploader');
       await this.initializeUploader(this.options);
       UploadLogger.log(logConfig.types.info, 'Drive uploader initialized');
 
